@@ -5,14 +5,13 @@ import math
 from typing import List
 
 
-def index_range(page, page_size):
+def index_range(page: int, page_size: int) -> tuple:
     """ a function that takes two integer arguments page and page_size, and
     return a tuple of size two containing a start index and an end index.
     """
-    if not isinstance(page, int) or not isinstance(page_size, int)
-    or page <= 0:
-        raise AssertionError("Both page and page_size should be
-                             positive integers.")
+    if not isinstance(page, int) or not isinstance(page_size, int) or page < 1:
+        raise AssertionError
+        ("Both page and page_size should be positive integers.")
 
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
