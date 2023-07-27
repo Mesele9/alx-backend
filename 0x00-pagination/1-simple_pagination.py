@@ -9,11 +9,11 @@ def index_range(page: int, page_size: int) -> tuple:
     """ a function that takes two integer arguments page and page_size, and
     return a tuple of size two containing a start index and an end index.
     """
-    if not isinstance(page, int) or not isinstance(page_size, int) or page < 1:
-        raise AssertionError
-        ("Both page and page_size should be positive integers.")
+    if page <= 1:
+        start_index = 0
+    else:
+        start_index = (page - 1) * page_size
 
-    start_index = (page - 1) * page_size
     end_index = start_index + page_size
 
     return start_index, end_index
@@ -44,12 +44,12 @@ class Server:
         correctly and return the appropriate page of the dataset
         (i.e. the correct list of rows).
         """
-        try:
-            start_index, end_index = index_range(page, page_size)
-        except AssertionError:
-            return []
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
 
+        start_index, end_index = index_range(page, page_size)
         dataset = self.dataset()
+
         if start_index >= len(dataset):
             return []
 
