@@ -2,6 +2,7 @@
 """ 4-app.py """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
+from typing import Dict, Union
 
 app = Flask(__name__)
 babel = Babel(app)
@@ -14,6 +15,9 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
+app.config.from_object(Config)
+
+
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -22,7 +26,7 @@ users = {
 }
 
 
-def get_user(user_id: int) -> dict or None:
+def get_user(user_id: int) -> Union[Dict, None]:
     """ get users from the users table """
     return users.get(user_id)
 
@@ -58,9 +62,6 @@ def before_request():
         g.user = get_user(user_id)
     else:
         g.user = None
-
-
-app.config.from_object(Config)
 
 
 @app.route('/')
