@@ -15,11 +15,13 @@ users = {
 
 
 def get_user(user_id: int) -> dict:
+    """ get users from the users table """
     return users.get(user_id)
 
 
 @app.before_request
 def before_request():
+    """ a fucntion that checks for login before loading"""
     login_as = request.args.get('login_as')
     if login_as is not None:
         user_id = int(login_as)
@@ -40,8 +42,9 @@ app.config.from_object(Config)
 
 @babel.localeselector
 def get_locale():
-    """ get_locale function """
+    """ determine the best macthing for the language """
     locale = request.args.get('locale')
+    # checks if local argument is provided
     if locale in app.config['LANGUAGES']:
         return locale
 
