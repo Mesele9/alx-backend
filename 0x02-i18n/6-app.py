@@ -13,6 +13,7 @@ class Config:
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
+
 app.config.from_object(Config)
 
 users = {
@@ -33,11 +34,12 @@ def get_locale():
     """ determine the best macthing for the language """
     locale = request.args.get('locale')
     # checks if local argument is provided
-    if locale in app.config['LANGUAGES']:    
+    if locale in app.config['LANGUAGES']:
         return locale
 
-    #check if user is logged and has local
-    if g.user and 'locale' in g.user and g.user['local'] in app.config['LANGUAGE']:
+    # check if user is logged and has local
+    if g.user and 'locale' in g.user and g.user['local'] in app.config[
+            'LANGUAGE']:
         return g.user['locale']
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
