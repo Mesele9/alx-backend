@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
-""" 4-app.py """
+""" 5-app.py """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
 
 app = Flask(__name__)
 babel = Babel(app)
+
+
+class Config:
+    """ config class """
+    LANGUAGES = ['en', 'fr']
+    BABEL_DEFAULT_LOCALE = 'en'    
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
+
+
+app.config.from_object(Config)
+
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -30,22 +41,12 @@ def before_request():
         g.user = None
 
 
-class Config:
-    """ config class """
-    LANGUAGES = ['en', 'fr']
-    BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
-
-
-app.config.from_object(Config)
-
-
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """ determine the best macthing for the language """
     locale = request.args.get('locale')
     # checks if local argument is provided
-    if locale in app.config['LANGUAGES']:
+    if locale and locale in app.config['LANGUAGES']:
         return locale
 
     return request.accept_languages.best_match(app.config['LANGUAGES'])
