@@ -14,8 +14,6 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-app.config.from_object(Config)
-
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -30,7 +28,7 @@ def get_user(user_id: int) -> dict:
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """ determine the best macthing for the language """
     locale = request.args.get('locale')
     # checks if local argument is provided
@@ -39,7 +37,7 @@ def get_locale():
 
     # check if user is logged and has local
     if g.user and 'locale' in g.user and g.user['locale'] in app.config[
-            'LANGUAGES']:
+        'LANGUAGES']:
             return g.user['locale']
 
     # use the best match from request header
@@ -55,6 +53,9 @@ def before_request():
         g.user = get_user(user_id)
     else:
         g.user = None
+
+
+app.config.from_object(Config)
 
 
 @app.route('/')
