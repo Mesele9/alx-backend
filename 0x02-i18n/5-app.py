@@ -2,6 +2,8 @@
 """ 5-app.py """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
+from typing import Dict, Union
+
 
 app = Flask(__name__)
 babel = Babel(app)
@@ -25,20 +27,20 @@ users = {
 }
 
 
-def get_user(user_id: int) -> dict:
+def get_user() -> Union[Dict, None]:
     """ get users from the users table """
-    return users.get(user_id)
+    try:
+        return users[int(request.args.get('login_as'))]
+    except Exception:
+        return None
 
 
 @app.before_request
 def before_request():
     """ a fucntion that checks for login before loading"""
-    login_as = request.args.get('login_as')
-    if login_as is not None:
-        user_id = int(login_as)
-        g.user = get_user(user_id)
-    else:
-        g.user = None
+    user = get_user()
+    if user:
+        g.user = user
 
 
 @babel.localeselector
