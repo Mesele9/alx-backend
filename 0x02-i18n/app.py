@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """ 4-app.py """
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, _
+from flask_babel import Babel, format_datetime, _
 from typing import Dict, Union
 import pytz
-from datetime import datetime
 
 
 app = Flask(__name__)
@@ -82,9 +81,8 @@ def before_request():
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     """ index route to the home """
-    current_time = datetime.now(pytz.timezone(get_timezone())).strftime(
-            '%b %d, %Y, %I:%M:%S %p')
-    return render_template('index.html', current_time=current_time)
+    g.time = format_datetime()
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
