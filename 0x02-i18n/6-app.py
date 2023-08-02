@@ -36,9 +36,14 @@ def get_locale() -> str:
         return locale
 
     # check if user is logged and has local
-    if g.user and 'locale' in g.user and g.user['locale'] in app.config[
-            'LANGUAGES']:
-        return g.user['locale']
+    if g.user:
+        locale = g.user['locale']
+        if locale and locale in app.config['LANGUAGES']:
+            return locale
+
+    headers = request.headers.get('Accept-Language')
+    if headers:
+        return headers.split(',')[0]
 
     # use the best match from request header
     return request.accept_languages.best_match(app.config['LANGUAGES'])
